@@ -37,3 +37,8 @@ tomlkit==0.13.2
 typing_extensions==4.12.2
 urllib3==2.8.0
 uvicorn==0.32.0
+argon2-cffi==25.1.0
+email-validator==2.3.0
+psycopg==3.3.8
+psycopg-binary==3.3.8
+SQLAlchemy==2.1.8

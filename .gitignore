@@ -7,3 +7,9 @@ __pycache__/
 htmlcov
 .env
 .venv/README_module8_backup.md
+.venv/
+.env
+.env.*
+!.env.example
+docker-compose.override.yml
+README_module8_backup.md
