@@ -93,3 +93,71 @@ The `.env` file is excluded from Git using `.gitignore`.
 Screenshots demonstrate successful SQL commands and Docker Compose services.
 
 A separate report and reflection document the assignment results and learning experience.
+
+---
+
+## Module 10: Secure Users and CI/CD
+
+### Overview
+In Module 10, I extended my FastAPI calculator project with secure user data models, password hashing, PostgreSQL integration tests, and an automated CI/CD pipeline.
+
+### New Features
+- SQLAlchemy User model with unique usernames and emails.
+- Password hashing using Argon2.
+- Pydantic schemas for input validation.
+- PostgreSQL database connection using SQLAlchemy.
+- Separate test database to protect existing Module 9 data.
+
+### Testing
+The following tests passed locally:
+- 30 unit tests.
+- 8 integration tests.
+- 3 end-to-end tests.
+
+Unit tests:
+python -m pytest tests/unit/
+
+Integration tests:
+python -m pytest tests/integration/
+
+End-to-end tests:
+python -m pytest tests/e2e/
+
+PostgreSQL integration tests require DATABASE_URL to point to an initialized module10_test_db database.
+
+### GitHub Actions CI/CD
+GitHub Actions automatically:
+1. Installs Python dependencies.
+2. Starts a PostgreSQL test database.
+3. Runs automated tests.
+4. Builds the Docker image.
+5. Scans the image using Trivy.
+6. Pushes the image to Docker Hub after successful checks.
+
+### Security
+- Passwords are hashed using Argon2.
+- Database credentials are not stored in source code.
+- Environment files are excluded from Git and Docker builds.
+- Trivy scans for HIGH and CRITICAL vulnerabilities.
+- A verified false-positive pip inventory file is excluded from scanning.
+
+### Docker Hub
+Repository:
+https://hub.docker.com/r/mozhdeh83/module10-calculator
+
+Pull the published Docker image:
+docker pull mozhdeh83/module10-calculator:module10-secure-users
+
+Run the published image:
+docker run --rm -p 127.0.0.1:8001:8000 mozhdeh83/module10-calculator:module10-secure-users
+
+Open:
+http://127.0.0.1:8001/docs
+
+### Results
+- All 41 local tests passed across the test suites.
+- Docker image built and ran successfully.
+- Trivy security scan passed under the configured policy.
+- GitHub Actions completed successfully.
+- Docker Hub image was published, pulled, and tested successfully.
+
