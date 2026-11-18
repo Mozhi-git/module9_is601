@@ -1,7 +1,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import DateTime, String, func
+from sqlalchemy import DateTime, Float, ForeignKey, String, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -30,4 +30,22 @@ class User(Base):
         DateTime(),
         server_default=func.now(),
         nullable=False
+    )
+
+class Calculation(Base):
+    __tablename__ = "calculations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    a: Mapped[float] = mapped_column(Float, nullable=False)
+    b: Mapped[float] = mapped_column(Float, nullable=False)
+
+    type: Mapped[str] = mapped_column(
+        String(20), nullable=False
+    )
+
+    result: Mapped[float] = mapped_column(Float, nullable=False)
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"), nullable=False
     )

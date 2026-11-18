@@ -5,7 +5,9 @@
 
 This project demonstrates how to use PostgreSQL with a FastAPI calculator application in a Docker Compose environment.
 
-The database is managed through pgAdmin using raw SQL commands.
+
+In Module 9, I used PostgreSQL and pgAdmin to work with raw SQL. In Modules 10 and 11, I expanded the project using SQLAlchemy models and Pydantic schemas.
+
 
 ## Technologies Used
 
@@ -161,3 +163,102 @@ http://127.0.0.1:8001/docs
 - GitHub Actions completed successfully.
 - Docker Hub image was published, pulled, and tested successfully.
 
+
+---
+
+## Module 11: Calculation Model and Testing
+
+### Overview
+In Module 11, I extended my FastAPI calculator application by adding a Calculation model using SQLAlchemy, Pydantic validation, and a Factory Pattern.
+
+### New Features
+- SQLAlchemy Calculation model with id, a, b, type, result, and user_id.
+- Foreign key connecting calculations to users.
+- Pydantic CalculationCreate and CalculationRead schemas.
+- Validation for invalid operation types, division by zero, and invalid input.
+- Factory Pattern supporting Add, Sub, Multiply, and Divide.
+- PostgreSQL integration tests.
+
+### Running Tests Locally
+
+Activate the Python virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Start PostgreSQL:
+
+```bash
+docker compose start db
+```
+
+
+Before running integration tests, set `DATABASE_URL` to the PostgreSQL `module10_test_db` database. The local Docker connection uses port 5433.
+
+Example DATABASE_URL configuration:
+
+```bash
+export DATABASE_URL='postgresql+psycopg://postgres:YOUR_PASSWORD@127.0.0.1:5433/module10_test_db'
+```
+
+Replace YOUR_PASSWORD with the local PostgreSQL password. If the password contains special URL characters, they must be URL-encoded. Never commit actual database credentials to GitHub.
+
+
+Run unit tests:
+
+```bash
+python -m pytest tests/unit -q
+```
+
+Run integration tests:
+
+```bash
+python -m pytest tests/integration -q
+```
+
+Run all tests:
+
+```bash
+python -m pytest -q -ra
+```
+
+### Test Results
+- 54 unit tests passed.
+- 13 integration tests passed.
+- 3 end-to-end tests passed.
+- 70 total tests passed locally.
+- 98% overall code coverage.
+
+### GitHub Actions CI/CD
+The GitHub Actions workflow is configured to:
+1. Start a PostgreSQL test database.
+2. Install Python dependencies.
+3. Create database tables using SQLAlchemy.
+4. Run unit, integration, and E2E tests.
+5. Build a Docker image.
+6. Scan the image using Trivy.
+7. Push the image to Docker Hub after successful checks.
+
+### Docker Hub
+Repository:
+https://hub.docker.com/r/mozhdeh83/module10-calculator
+
+The Module 11 workflow is configured to publish the Docker image with the tag:
+
+`module11-calculations`
+
+Pull command after successful CI/CD deployment:
+
+```bash
+docker pull mozhdeh83/module10-calculator:module11-calculations
+```
+
+
+### Security Scan Exception
+
+The GitHub Actions workflow uses Trivy to scan the Docker image for HIGH and CRITICAL vulnerabilities.
+
+The workflow excludes `**/pip/_vendor/bom.cdx.json`, a pip dependency inventory file. This exception was introduced during Module 10 troubleshooting.
+
+The exception should be reviewed against the original scan findings and reconsidered whenever dependencies or the Docker base image change. It should be removed if it is no longer justified.

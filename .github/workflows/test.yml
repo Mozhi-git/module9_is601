@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main, module10-secure-users ]
+    branches: [ main, module10-secure-users, module11-calculations ]
   pull_request:
-    branches: [ main, module10-secure-users ]
+    branches: [ main, module10-secure-users, module11-calculations ]
 
 
 jobs:
