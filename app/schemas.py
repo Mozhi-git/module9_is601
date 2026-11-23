@@ -51,3 +51,13 @@ class CalculationRead(BaseModel):
     type: CalculationType
     result: float
     user_id: int
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class UserLoginResponse(BaseModel):
+    message: str
+    user: UserRead
