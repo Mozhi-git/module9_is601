@@ -262,3 +262,137 @@ The GitHub Actions workflow uses Trivy to scan the Docker image for HIGH and CRI
 The workflow excludes `**/pip/_vendor/bom.cdx.json`, a pip dependency inventory file. This exception was introduced during Module 10 troubleshooting.
 
 The exception should be reviewed against the original scan findings and reconsidered whenever dependencies or the Docker base image change. It should be removed if it is no longer justified.
+
+---
+
+## Module 12: User and Calculation Routes + Integration Testing
+
+### Overview
+
+In Module 12, I connected the existing User and Calculation models to FastAPI routes. The application now supports user registration and login, as well as complete BREAD operations for calculations.
+
+### User Routes
+
+The following user endpoints were implemented:
+
+- `POST /users/register` - Register a new user.
+- `POST /users/login` - Authenticate a user by verifying the stored Argon2 password hash.
+
+User responses do not expose passwords or password hashes.
+
+### Calculation BREAD Routes
+
+The following calculation endpoints were implemented:
+
+- `GET /calculations` - Browse all calculations.
+- `GET /calculations/{calculation_id}` - Read one calculation.
+- `POST /calculations` - Add a new calculation.
+- `PUT /calculations/{calculation_id}` - Edit an existing calculation.
+- `DELETE /calculations/{calculation_id}` - Delete a calculation.
+
+The calculation routes use the existing SQLAlchemy Calculation model, Pydantic schemas, and CalculationFactory.
+
+### Manual Testing with OpenAPI
+
+Start the FastAPI application:
+
+```bash
+.venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port 8000
+```
+
+Open Swagger/OpenAPI:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+The following operations were manually verified:
+
+- User registration returned `201 Created`.
+- Successful login returned `200 OK`.
+- Incorrect login returned `401 Unauthorized`.
+- Browse calculations returned `200 OK`.
+- Read calculation returned `200 OK`.
+- Add calculation returned `201 Created`.
+- Edit calculation returned `200 OK`.
+- Delete calculation returned `204 No Content`.
+
+### Running Integration Tests
+
+Activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Set `DATABASE_URL` to the PostgreSQL test database:
+
+```bash
+export DATABASE_URL='postgresql+psycopg://postgres:YOUR_PASSWORD@127.0.0.1:5433/module10_test_db'
+```
+
+Replace `YOUR_PASSWORD` with the local PostgreSQL password. Do not commit database credentials to GitHub.
+
+Run the Module 12 route tests:
+
+```bash
+pytest tests/integration/test_module12_routes.py -q
+```
+
+Run all integration tests:
+
+```bash
+pytest tests/integration -q
+```
+
+Local integration test result:
+
+```text
+16 passed
+```
+
+The integration test run reached 92% application code coverage.
+
+### GitHub Actions CI/CD
+
+The Module 12 GitHub Actions workflow successfully:
+
+1. Starts a PostgreSQL 16 test database.
+2. Creates the PostgreSQL test tables.
+3. Runs automated tests.
+4. Builds the Docker image.
+5. Scans the Docker image using Trivy.
+6. Logs in to Docker Hub.
+7. Pushes the Docker image to Docker Hub.
+
+### Docker Hub
+
+Repository:
+
+```text
+https://hub.docker.com/r/mozhdeh83/module10-calculator
+```
+
+Module 12 image tag:
+
+```text
+module12-routes
+```
+
+Pull the Module 12 image:
+
+```bash
+docker pull mozhdeh83/module10-calculator:module12-routes
+```
+
+### Results
+
+- User registration and login routes completed.
+- All five Calculation BREAD routes completed.
+- Manual Swagger/OpenAPI testing completed.
+- 16 integration tests passed locally.
+- 92% application code coverage during the integration test run.
+- GitHub Actions CI/CD completed successfully.
+- Docker image built successfully.
+- Trivy security scan passed.
+- Module 12 Docker image published successfully to Docker Hub.
