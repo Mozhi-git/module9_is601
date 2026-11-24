@@ -1,3 +1,4 @@
+from app.routes.calculations import router as calculations_router
 from app.routes.users import router as users_router
 # main.py
 
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 app.include_router(users_router)
+app.include_router(calculations_router)
 
 # Setup templates directory
 templates = Jinja2Templates(directory="templates")
